@@ -1,4 +1,5 @@
 LOAD CSV WITH HEADERS FROM 'file:///economic_data.csv' AS data 
+FIELDTERMINATOR ';'
 CREATE (:Country {
   name                  : data.country,
   ghrp                  : data.GHRP,
@@ -7,3 +8,4 @@ CREATE (:Country {
   aid_dependence        : toFloat(data.`Aid dependence`),
   tourism_gdp           : toFloat(data.`tourism as percentage of GDP`)
 });
+
