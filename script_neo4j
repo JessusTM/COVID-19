@@ -33,6 +33,13 @@ MERGE (c)-[:HAS_INCOME_CLASSIFICATION]->(i);
 
 
 
+----- Primeras 10 relaciones para IncomeClassification -----
+MATCH (c:Country)-[:HAS_INCOME_CLASSIFICATION]->(i:IncomeClassification)
+RETURN c.name, i.level
+LIMIT 10;
+
+
+
 ----- Relaciones para Tourism -----
 MATCH (c:Country)
 WHERE c.tourism_gdp IS NOT NULL
@@ -41,8 +48,21 @@ MERGE (c)-[:DEPENDS_ON_TOURISM]->(t);
 
 
 
+----- Primeras 10 relaciones para Tourism -----
+MATCH (c:Country)-[:DEPENDS_ON_TOURISM]->(t:Tourism)
+RETURN c.name, t.percentage
+LIMIT 10;
+
+
 ----- Relaciones para Aid -----
 MATCH (c:Country)
 WHERE c.aid_dependence IS NOT NULL
 MERGE (a:Aid {percentage: c.aid_dependence})
 MERGE (c)-[:RECEIVES_AID]->(a);
+
+
+
+----- Primeras 10 relaciones para Aid -----
+MATCH (c:Country)-[:RECEIVES_AID]->(a:Aid)
+RETURN c.name, a.percentage
+LIMIT 10;
