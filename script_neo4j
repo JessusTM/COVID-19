@@ -1,0 +1,9 @@
+LOAD CSV WITH HEADERS FROM 'file:///economic_data.csv' AS data 
+CREATE (:Country {
+  name                  : data.country,
+  ghrp                  : data.GHRP,
+  income_classification : data.`Income classification according to WB`,
+  net_oda               : toFloat(data.Net_ODA_received_perc_of_GNI),
+  aid_dependence        : toFloat(data.`Aid dependence`),
+  tourism_gdp           : toFloat(data.`tourism as percentage of GDP`)
+});
