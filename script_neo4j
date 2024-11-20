@@ -1,11 +1,48 @@
-LOAD CSV WITH HEADERS FROM 'file:///economic_data.csv' AS data 
+----- ELIMINAR TODOS LOS DATOS -----
+MATCH (n)
+  DETACH DELETE n;
+
+
+
+----- Cargar datos del CSV a Neo4j -----
+LOAD CSV WITH HEADERS FROM 'file:///economic_data.csv' AS data
 FIELDTERMINATOR ';'
+WITH data
+WHERE data.country IS NOT NULL AND
+      data.GHRP IS NOT NULL AND
+      data.`Income classification according to WB` IS NOT NULL AND
+      data.`Net_ODA_received_perc_of_GNI` IS NOT NULL AND
+      data.`Aid dependence` IS NOT NULL AND
+      data.`tourism as percentage of GDP` IS NOT NULL
 CREATE (:Country {
   name                  : data.country,
   ghrp                  : data.GHRP,
   income_classification : data.`Income classification according to WB`,
-  net_oda               : toFloat(data.Net_ODA_received_perc_of_GNI),
+  net_oda               : toFloat(data.`Net_ODA_received_perc_of_GNI`),
   aid_dependence        : toFloat(data.`Aid dependence`),
   tourism_gdp           : toFloat(data.`tourism as percentage of GDP`)
 });
 
+
+
+----- Relaciones para IncomeClassification -----
+MATCH (c:Country)
+WHERE c.income_classification IS NOT NULL
+MERGE (i:IncomeClassification {level: c.income_classification})
+MERGE (c)-[:HAS_INCOME_CLASSIFICATION]->(i);
+
+
+
+----- Relaciones para Tourism -----
+MATCH (c:Country)
+WHERE c.tourism_gdp IS NOT NULL
+MERGE (t:Tourism {percentage: c.tourism_gdp})
+MERGE (c)-[:DEPENDS_ON_TOURISM]->(t);
+
+
+
+----- Relaciones para Aid -----
+MATCH (c:Country)
+WHERE c.aid_dependence IS NOT NULL
+MERGE (a:Aid {percentage: c.aid_dependence})
+MERGE (c)-[:RECEIVES_AID]->(a);
