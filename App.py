@@ -75,7 +75,7 @@ def GetAllCountriesWhitIncomeClassification(tx, incomeClassification):
 
 #Funciones de neo4j que retorna los paises con porcentaje de turismo similar al pais ingresado
 def GetSimilarTourismCountries(tx, countryName, tolerance=10):
-    countryName = countryName.capitalize()
+    countryName = countryName
 
     query = """
     MATCH (c:Country {name: $countryName})-[:DEPENDS_ON_TOURISM]->(t:Tourism)
@@ -169,7 +169,8 @@ def CountryWithTourismSimilarity(countryName, tolerance=10):
 def menu():
 
     while True:
-        print("\n1. Consultar paises con mas de n muertes en un dia")
+        print("\nMenu:\n")
+        print("1. Consultar paises con mas de n muertes en un dia")
         print("2. Consultar paises con mas de n casos en un dia")
         print("3. Muertes y casos en paises segun su clasificacion de ingresos")
         print("4. Estado paises con porcentaje de turismo similar")
@@ -191,7 +192,7 @@ def menu():
                     DeathAndCasesInCountryWhitIncomeClassification(incomeClassification)
                 case "4":
                     countryName = input("Ingrese el nombre del pais: ")
-                    CountryWithTourismSimilarity(countryName, 5)
+                    CountryWithTourismSimilarity(countryName, 2) # +- 2 de tolerancia
                 case "0":
                     print("Saliendo...")
                     break
@@ -200,6 +201,8 @@ def menu():
 
         except ValueError as e:
             print(f"Error: Opcion invalida")
+        except Exception as e:
+            print(f"Error: {e}")
 
 
 
