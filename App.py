@@ -24,7 +24,7 @@ def GetCountriesWithTotalDeathsAbove(deaths):
 
 #Funciones de mongodb que busca los paises con mas de cierto total de casos registrados
 def GetCountriesWithTotalCasesAbove(cases):
-    return list(collection.find({"new_cases": {"$gt": cases}, "location": {"$nin": ["World", "Upper-middle-income countries", "South America"]}}))
+    return list(collection.find({"new_cases": {"$gt": cases}, "location": {"$nin": except_location}}))
 
 #Funciones de mongodb que retorna el total de casos y muertes de un pais
 def GetCovidData(countryName):
